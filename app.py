@@ -104,15 +104,4 @@ if upload_ is not None:
             if prediction_result[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
 
-# Si se ha tomado una foto, muestra la foto y resultados
-if image_display is not None:
-    st.image(image_display, caption='Foto tomada', use_column_width=True)
-    if prediction_result is not None:
-        if prediction_result[0][0] > 0.5:
-            st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
-        if prediction_result[0][1] > 0.5:
-            st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-        if prediction_result[0][2] > 0.5:
-            st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-        if prediction_result[0][3] > 0.5:
-            st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+
