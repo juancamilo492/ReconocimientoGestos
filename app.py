@@ -19,7 +19,14 @@ image = Image.open('OIG5.jpg')
 st.image(image, width=350)
 with st.sidebar:
     st.subheader("Usando un modelo entrenado en teachable Machine puedes Usarlo en esta app para identificar")
-img_file_buffer = st.camera_input("Toma una Foto")
+    
+cam_ = st.checkbox("Usar Cámara")
+if cam_ :
+   img_file_buffer = st.camera_input("Toma una Foto")
+else :
+   img_file_buffer = None
+
+bg_image = st.file_uploader("Cargar Imagen:", type=["png", "jpg"])
 
 if img_file_buffer is not None:
     # To read image file buffer with OpenCV:
