@@ -21,7 +21,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     cam_ = st.checkbox("Usar Cámara")
-    
+
 with col2:
     upload_ = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
@@ -85,15 +85,23 @@ if cam_:
             prediction_result = predict_image(normalized_image_array)
             if prediction_result is not None:
                 # Mostrar los resultados de la predicción
+                prediction_displayed = False
                 if prediction_result[0][0] > 0.5:
                     st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                    prediction_displayed = True
                 if prediction_result[0][1] > 0.5:
                     st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                    prediction_displayed = True
                 if prediction_result[0][2] > 0.5:
                     st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+                    prediction_displayed = True
                 if prediction_result[0][3] > 0.5:
                     st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-        
+                    prediction_displayed = True
+                
+                if not prediction_displayed:
+                    st.write("Ninguna predicción supera el umbral de 0.5.")
+
         # Procesar la imagen para la extracción de texto
         img_filtered = process_image(img)
         text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
@@ -114,17 +122,24 @@ if upload_ is not None:
         prediction_result = predict_image(normalized_image_array)
         if prediction_result is not None:
             # Mostrar los resultados de la predicción
+            prediction_displayed = False
             if prediction_result[0][0] > 0.5:
                 st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                prediction_displayed = True
             if prediction_result[0][1] > 0.5:
                 st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                prediction_displayed = True
             if prediction_result[0][2] > 0.5:
                 st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+                prediction_displayed = True
             if prediction_result[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+                prediction_displayed = True
+            
+            if not prediction_displayed:
+                st.write("Ninguna predicción supera el umbral de 0.5.")
     
     # Procesar la imagen para la extracción de texto
     img_filtered = process_image(uploaded_image)
     text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
     st.write("Texto extraído de la imagen con filtro:", text)
-
