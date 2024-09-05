@@ -63,23 +63,27 @@ def predict_image(image_array):
 image_container = st.empty()
 result_container = st.empty()
 
+# Variables para almacenar la imagen y los resultados
+image_display = None
+prediction_result = None
+
 if cam_:
     img_file_buffer = st.camera_input("Toma una Foto")
     if img_file_buffer is not None:
-        # Limpia los contenedores antes de mostrar nuevos datos
-        image_container.empty()
-        result_container.empty()
-        
         # Lee el buffer de la imagen como una imagen PIL
         img = Image.open(img_file_buffer).convert('RGB')
         normalized_image_array = process_image(img)
         
         if normalized_image_array is not None:
+            # Limpia el contenedor de la imagen anterior
+            image_container.empty()
             # Muestra la imagen tomada
             image_container.image(img, caption='Foto tomada', use_column_width=True)
             # Realiza la predicción
             prediction_result = predict_image(normalized_image_array)
             if prediction_result is not None:
+                # Limpia el contenedor de los resultados anteriores
+                result_container.empty()
                 if prediction_result[0][0] > 0.5:
                     result_container.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
                 if prediction_result[0][1] > 0.5:
@@ -89,21 +93,21 @@ if cam_:
                 if prediction_result[0][3] > 0.5:
                     result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
 
-elif upload_ is not None:
-    # Limpia los contenedores antes de mostrar nuevos datos
-    image_container.empty()
-    result_container.empty()
-
+if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
     uploaded_image = Image.open(upload_).convert('RGB')
     normalized_image_array = process_image(uploaded_image)
     
     if normalized_image_array is not None:
+        # Limpia el contenedor de la imagen anterior
+        image_container.empty()
         # Muestra la imagen cargada
         image_container.image(uploaded_image, caption='Imagen cargada.', use_column_width=True)
         # Realiza la predicción
         prediction_result = predict_image(normalized_image_array)
         if prediction_result is not None:
+            # Limpia el contenedor de los resultados anteriores
+            result_container.empty()
             if prediction_result[0][0] > 0.5:
                 result_container.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
             if prediction_result[0][1] > 0.5:
@@ -112,7 +116,4 @@ elif upload_ is not None:
                 result_container.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
                 result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-
-# Si se ha tomado una foto, muestra la foto y resultados
-# (Este bloque ya está incluido en los bloques anteriores)
 
