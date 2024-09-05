@@ -91,8 +91,6 @@ if upload_ is not None:
     normalized_image_array = process_image(uploaded_image)
     
     if normalized_image_array is not None:
-        st.write("Forma de normalized_image_array:", normalized_image_array.shape)
-        st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
         
         # Realiza la predicción
         prediction_result = predict_image(normalized_image_array)
