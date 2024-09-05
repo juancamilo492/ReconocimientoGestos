@@ -4,7 +4,7 @@ streamlit
 streamlit-webrtc
 
 
-numpy==1.26.3
+numpy
 opencv-python-headless
 
 opencv-python-headless
