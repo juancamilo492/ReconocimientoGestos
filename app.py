@@ -59,7 +59,11 @@ def predict_image(image_array):
         st.error(f"Array tiene una forma o tipo incorrecto: {image_array.shape}, {image_array.dtype}")
         return None
 
-# Variables para almacenar las imágenes y resultados
+# Contenedores para mostrar resultados
+image_container = st.empty()
+result_container = st.empty()
+
+# Variables para almacenar la imagen y los resultados
 image_display = None
 prediction_result = None
 
@@ -71,50 +75,44 @@ if cam_:
         normalized_image_array = process_image(img)
         
         if normalized_image_array is not None:
-            st.image(img, caption='Foto tomada', use_column_width=True)
-            image_display = img
+            # Limpia el contenedor de la imagen anterior
+            image_container.empty()
+            # Muestra la imagen tomada
+            image_container.image(img, caption='Foto tomada', use_column_width=True)
+            # Realiza la predicción
             prediction_result = predict_image(normalized_image_array)
             if prediction_result is not None:
+                # Limpia el contenedor de los resultados anteriores
+                result_container.empty()
                 if prediction_result[0][0] > 0.5:
-                    st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                    result_container.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
                 if prediction_result[0][1] > 0.5:
-                    st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                    result_container.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
                 if prediction_result[0][2] > 0.5:
-                    st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+                    result_container.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
                 if prediction_result[0][3] > 0.5:
-                    st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+                    result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
     uploaded_image = Image.open(upload_).convert('RGB')
-    st.image(uploaded_image, caption='Imagen cargada.', use_column_width=True)
     normalized_image_array = process_image(uploaded_image)
     
     if normalized_image_array is not None:
-        st.write("Forma de normalized_image_array:", normalized_image_array.shape)
-        st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
-        
+        # Limpia el contenedor de la imagen anterior
+        image_container.empty()
+        # Muestra la imagen cargada
+        image_container.image(uploaded_image, caption='Imagen cargada.', use_column_width=True)
         # Realiza la predicción
         prediction_result = predict_image(normalized_image_array)
         if prediction_result is not None:
+            # Limpia el contenedor de los resultados anteriores
+            result_container.empty()
             if prediction_result[0][0] > 0.5:
-                st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                result_container.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
             if prediction_result[0][1] > 0.5:
-                st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                result_container.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
             if prediction_result[0][2] > 0.5:
-                st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+                result_container.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
-                st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-
-# Si se ha tomado una foto, muestra la foto y resultados
-if image_display is not None:
-    st.image(image_display, caption='Foto tomada', use_column_width=True)
-    if prediction_result is not None:
-        if prediction_result[0][0] > 0.5:
-            st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
-        if prediction_result[0][1] > 0.5:
-            st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-        if prediction_result[0][2] > 0.5:
-            st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-        if prediction_result[0][3] > 0.5:
-            st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+                result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
