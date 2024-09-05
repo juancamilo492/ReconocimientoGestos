@@ -42,6 +42,7 @@ if img_file_buffer is not None:
     # Normaliza la imagen
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
     # Carga la imagen en el array
+    st.header("xd")
     data[0] = normalized_image_array
 
     # Ejecuta la inferencia
@@ -58,7 +59,7 @@ if img_file_buffer is not None:
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
-    img = Image.open(upload_).convert('RGB')
+    img = Image.open(upload_)
 
     newsize = (224, 224)
     img = img.resize(newsize)
