@@ -58,7 +58,7 @@ if img_file_buffer is not None:
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
-    img = Image.open(upload_)
+    img = Image.open(upload_).convert('RGB')
 
     newsize = (224, 224)
     img = img.resize(newsize)
