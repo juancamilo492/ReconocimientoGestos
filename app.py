@@ -64,7 +64,7 @@ if upload_ is not None:
     img = img.resize(newsize)
     # Convierte la imagen PIL a un array numpy
     img_array = np.array(img)
-
+    
     # Normaliza la imagen
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
     # Carga la imagen en el array
@@ -81,4 +81,5 @@ if upload_ is not None:
         st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
     if prediction[0][3] > 0.5:
         st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
+    
 
