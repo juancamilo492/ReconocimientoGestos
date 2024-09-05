@@ -48,35 +48,41 @@ def process_image(img):
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
     return normalized_image_array
 
+def predict_image(image_array):
+    if image_array.shape == (224, 224, 3) and image_array.dtype == np.float32:
+        data[0] = image_array
+        # Ejecuta la inferencia
+        prediction = model.predict(data)
+        st.write("Predicción:", prediction)
+        return prediction
+    else:
+        st.error(f"Array tiene una forma o tipo incorrecto: {image_array.shape}, {image_array.dtype}")
+        return None
+
+# Variables para almacenar las imágenes y resultados
+image_display = None
+prediction_result = None
+
 if cam_:
     img_file_buffer = st.camera_input("Toma una Foto")
-else:
-    img_file_buffer = None
-
-if img_file_buffer is not None:
-    # Lee el buffer de la imagen como una imagen PIL
-    img = Image.open(img_file_buffer).convert('RGB')
-    normalized_image_array = process_image(img)
-    
-    if normalized_image_array is not None:
-        # Verifica la forma y el tipo antes de asignar
-        st.write("Forma de normalized_image_array:", normalized_image_array.shape)
-        st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
+    if img_file_buffer is not None:
+        # Lee el buffer de la imagen como una imagen PIL
+        img = Image.open(img_file_buffer).convert('RGB')
+        normalized_image_array = process_image(img)
         
-        # Carga la imagen en el array
-        if normalized_image_array.shape == (224, 224, 3) and normalized_image_array.dtype == np.float32:
-            data[0] = normalized_image_array
-            # Ejecuta la inferencia
-            prediction = model.predict(data)
-            print(prediction)
-            if prediction[0][0] > 0.5:
-                st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
-            if prediction[0][1] > 0.5:
-                st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
-            if prediction[0][2] > 0.5:
-                st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
-            if prediction[0][3] > 0.5:
-                st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
+        if normalized_image_array is not None:
+            st.image(img, caption='Foto tomada', use_column_width=True)
+            image_display = img
+            prediction_result = predict_image(normalized_image_array)
+            if prediction_result is not None:
+                if prediction_result[0][0] > 0.5:
+                    st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                if prediction_result[0][1] > 0.5:
+                    st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                if prediction_result[0][2] > 0.5:
+                    st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+                if prediction_result[0][3] > 0.5:
+                    st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
@@ -85,21 +91,30 @@ if upload_ is not None:
     normalized_image_array = process_image(uploaded_image)
     
     if normalized_image_array is not None:
-        # Verifica la forma y el tipo antes de asignar
         st.write("Forma de normalized_image_array:", normalized_image_array.shape)
         st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
         
-        # Carga la imagen en el array
-        if normalized_image_array.shape == (224, 224, 3) and normalized_image_array.dtype == np.float32:
-            data[0] = normalized_image_array
-            # Ejecuta la inferencia
-            prediction = model.predict(data)
-            print(prediction)
-            if prediction[0][0] > 0.5:
-                st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
-            if prediction[0][1] > 0.5:
-                st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
-            if prediction[0][2] > 0.5:
-                st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
-            if prediction[0][3] > 0.5:
-                st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
+        # Realiza la predicción
+        prediction_result = predict_image(normalized_image_array)
+        if prediction_result is not None:
+            if prediction_result[0][0] > 0.5:
+                st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+            if prediction_result[0][1] > 0.5:
+                st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+            if prediction_result[0][2] > 0.5:
+                st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+            if prediction_result[0][3] > 0.5:
+                st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+
+# Si se ha tomado una foto, muestra la foto y resultados
+if image_display is not None:
+    st.image(image_display, caption='Foto tomada', use_column_width=True)
+    if prediction_result is not None:
+        if prediction_result[0][0] > 0.5:
+            st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+        if prediction_result[0][1] > 0.5:
+            st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+        if prediction_result[0][2] > 0.5:
+            st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
+        if prediction_result[0][3] > 0.5:
+            st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
