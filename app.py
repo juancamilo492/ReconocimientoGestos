@@ -68,18 +68,8 @@ if cam_:
         # Leer el buffer de la imagen como una imagen PIL
         img = Image.open(img_file_buffer).convert('RGB')
         
-        # Procesar la imagen
-        img_cv = process_image(img)
-        
-        # Convertir a RGB para mostrar en Streamlit
-        img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
-        
-        # Mostrar imagen en Streamlit
-        st.image(img_rgb, caption='Imagen procesada', use_column_width=True)
-        
-        # Extraer texto de la imagen
-        text = extract_text_from_image(img)
-        st.write("Texto extraído de la imagen:", text)
+        # Mostrar la imagen original
+        st.image(img, caption='Imagen original', use_column_width=True)
         
         # Preparar la imagen para la predicción
         normalized_image_array = normalize_image(img)
@@ -96,24 +86,19 @@ if cam_:
                     st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
                 if prediction_result[0][3] > 0.5:
                     st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+        
+        # Procesar la imagen para la extracción de texto
+        img_filtered = process_image(img)
+        text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
+        st.write("Texto extraído de la imagen con filtro:", text)
 
 # Procesar imagen desde un archivo subido
 if upload_ is not None:
     # Leer el archivo subido como una imagen PIL
     uploaded_image = Image.open(upload_).convert('RGB')
     
-    # Procesar la imagen
-    img_cv = process_image(uploaded_image)
-    
-    # Convertir a RGB para mostrar en Streamlit
-    img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
-    
-    # Mostrar imagen en Streamlit
-    st.image(img_rgb, caption='Imagen cargada', use_column_width=True)
-    
-    # Extraer texto de la imagen
-    text = extract_text_from_image(uploaded_image)
-    st.write("Texto extraído de la imagen:", text)
+    # Mostrar la imagen original
+    st.image(uploaded_image, caption='Imagen cargada', use_column_width=True)
     
     # Preparar la imagen para la predicción
     normalized_image_array = normalize_image(uploaded_image)
@@ -130,3 +115,9 @@ if upload_ is not None:
                 st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+    
+    # Procesar la imagen para la extracción de texto
+    img_filtered = process_image(uploaded_image)
+    text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
+    st.write("Texto extraído de la imagen con filtro:", text)
+
