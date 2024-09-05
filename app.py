@@ -11,11 +11,18 @@ data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 st.title("Reconocimiento de Imágenes y OCR")
 
-# Configuración de la barra lateral
+# Barra lateral con solo el texto
 with st.sidebar:
     st.subheader("Usa un modelo entrenado en Teachable Machine para identificar imágenes")
     filtro = st.radio("Aplicar Filtro", ('Con Filtro', 'Sin Filtro'))
+
+# Opciones para cámara y carga de archivos en la parte principal
+col1, col2 = st.columns(2)
+
+with col1:
     cam_ = st.checkbox("Usar Cámara")
+    
+with col2:
     upload_ = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
 # Función para aplicar el filtro a la imagen
