@@ -42,7 +42,6 @@ if img_file_buffer is not None:
     # Normaliza la imagen
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
     # Carga la imagen en el array
-    st.header("xd")
     data[0] = normalized_image_array
 
     # Ejecuta la inferencia
@@ -69,6 +68,7 @@ if upload_ is not None:
     # Normaliza la imagen
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
     # Carga la imagen en el array
+    st.header("xd")
     data[0] = normalized_image_array
 
     # Ejecuta la inferencia
