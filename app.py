@@ -7,13 +7,6 @@ from keras.models import load_model
 
 import platform
 
-from setuptools import setup
-
-setup(
-    # otros parámetros
-    python_requires='>=3.9',
-)
-
 # Muestra la versión de Python junto con detalles adicionales
 st.write("Versión de Python:", platform.python_version())
 
