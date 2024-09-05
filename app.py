@@ -30,11 +30,10 @@ uploaded_image = st.file_uploader("Cargar Imagen:", type=["png", "jpg"])
 
 if uploaded_image is not None:
 
-    img1 = st.image(uploaded_image, caption='Imagen cargada.', use_column_width=True)
     # To read image file buffer with OpenCV:
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-    img = Image.open(img1)
+    img = Image.open(uploaded_image)
 
     newsize = (224, 224)
     img = img.resize(newsize)
