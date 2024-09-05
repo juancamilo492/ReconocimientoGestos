@@ -25,42 +25,72 @@ with st.sidebar:
     # Opción para subir una imagen desde el archivo
     upload_ = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
+def process_image(img):
+    # Redimensiona la imagen
+    newsize = (224, 224)
+    img = img.resize(newsize)
+    # Convierte la imagen PIL a un array numpy
+    img_array = np.array(img)
+    
+    # Verifica si la imagen es en escala de grises o en RGB
+    if len(img_array.shape) == 2:
+        # Imagen en escala de grises, conviértela a RGB
+        img_array = np.stack([img_array] * 3, axis=-1)
+    
+    # Verifica la forma del array
+    if img_array.shape != (224, 224, 3):
+        st.error("La imagen no tiene la forma esperada (224, 224, 3).")
+        return None
+
+    # Normaliza la imagen
+    normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
+    return normalized_image_array
+
 if cam_:
     img_file_buffer = st.camera_input("Toma una Foto")
 else:
     img_file_buffer = None
 
 if img_file_buffer is not None:
-    # To read image file buffer with OpenCV:
-    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-   #To read image file buffer as a PIL Image:
-    img = Image.open(img_file_buffer)
-
-    newsize = (224, 224)
-    img = img.resize(newsize)
-    # To convert PIL Image to numpy array:
-    img_array = np.array(img)
-
-    # Normalize the image
-    normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
-    # Load the image into the array
-    data[0] = normalized_image_array
-
-    # Ejecuta la inferencia
-    prediction = model.predict(data)
-    print(prediction)
-    if prediction[0][0] > 0.5:
-        st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
-    if prediction[0][1] > 0.5:
-        st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
-    if prediction[0][2] > 0.5:
-        st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
-    if prediction[0][3] > 0.5:
-        st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
+    # Lee el buffer de la imagen como una imagen PIL
+    img = Image.open(img_file_buffer).convert('RGB')
+    normalized_image_array = process_image(img)
+    
+    if normalized_image_array is not None:
+        # Carga la imagen en el array
+        data[0] = normalized_image_array
+        # Ejecuta la inferencia
+        prediction = model.predict(data)
+        print(prediction)
+        if prediction[0][0] > 0.5:
+            st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
+        if prediction[0][1] > 0.5:
+            st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
+        if prediction[0][2] > 0.5:
+            st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
+        if prediction[0][3] > 0.5:
+            st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
 
 if upload_ is not None:
-    uploaded_file=bg_image
-    st.image(uploaded_file, caption='Imagen cargada.', use_column_width=True)
+    # Lee el archivo subido como una imagen PIL
+    uploaded_image = Image.open(upload_).convert('RGB')
+    st.image(uploaded_image, caption='Imagen cargada.', use_column_width=True)
+    normalized_image_array = process_image(uploaded_image)
+    
+    if normalized_image_array is not None:
+        # Carga la imagen en el array
+        data[0] = normalized_image_array
+        # Ejecuta la inferencia
+        prediction = model.predict(data)
+        print(prediction)
+        if prediction[0][0] > 0.5:
+            st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
+        if prediction[0][1] > 0.5:
+            st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
+        if prediction[0][2] > 0.5:
+            st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
+        if prediction[0][3] > 0.5:
+            st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
 
     
 
