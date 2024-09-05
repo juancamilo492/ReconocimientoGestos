@@ -31,17 +31,19 @@ else:
     img_file_buffer = None
 
 if img_file_buffer is not None:
-    # Lee el buffer de la imagen como una imagen PIL
+    # To read image file buffer with OpenCV:
+    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+   #To read image file buffer as a PIL Image:
     img = Image.open(img_file_buffer)
 
     newsize = (224, 224)
     img = img.resize(newsize)
-    # Convierte la imagen PIL a un array numpy
+    # To convert PIL Image to numpy array:
     img_array = np.array(img)
 
-    # Normaliza la imagen
+    # Normalize the image
     normalized_image_array = (img_array.astype(np.float32) / 127.0) - 1
-    # Carga la imagen en el array
+    # Load the image into the array
     data[0] = normalized_image_array
 
     # Ejecuta la inferencia
