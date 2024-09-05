@@ -1,0 +1,4 @@
+0 Palma
+1 Ok
+2 Cara
+3 Vacio
