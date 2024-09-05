@@ -53,7 +53,6 @@ def predict_image(image_array):
         data[0] = image_array
         # Ejecuta la inferencia
         prediction = model.predict(data)
-        st.write("Predicción:", prediction)
         return prediction
     else:
         st.error(f"Array tiene una forma o tipo incorrecto: {image_array.shape}, {image_array.dtype}")
@@ -63,16 +62,15 @@ def predict_image(image_array):
 image_container = st.empty()
 result_container = st.empty()
 
-# Variables de estado para controlar cuál imagen se está mostrando
+# Variables para controlar el estado
 showing_image = None
 
 if cam_:
     img_file_buffer = st.camera_input("Toma una Foto")
     if img_file_buffer is not None:
         # Limpia los contenedores antes de mostrar nuevos datos
-        if showing_image == 'upload':
-            image_container.empty()
-            result_container.empty()
+        image_container.empty()
+        result_container.empty()
         
         # Lee el buffer de la imagen como una imagen PIL
         img = Image.open(img_file_buffer).convert('RGB')
@@ -121,3 +119,7 @@ elif upload_ is not None:
                 result_container.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
                 result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+
+# Si se ha tomado una foto, muestra la foto y resultados
+# (Este bloque ya está incluido en los bloques anteriores)
+
