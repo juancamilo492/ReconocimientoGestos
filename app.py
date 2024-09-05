@@ -66,7 +66,7 @@ def predict_image(image_array):
 def extract_text_from_image(image):
     image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     text = pytesseract.image_to_string(image_cv)
-    return text
+    return text.strip()  # Eliminar espacios en blanco alrededor
 
 # Procesar imagen desde la cámara
 if cam_:
@@ -105,7 +105,10 @@ if cam_:
         # Procesar la imagen para la extracción de texto
         img_filtered = process_image(img)
         text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
-        st.write("Texto extraído de la imagen con filtro:", text)
+        if text:
+            st.write("Texto extraído de la imagen con filtro:", text)
+        else:
+            st.write("No se pudo extraer texto de la imagen.")
 
 # Procesar imagen desde un archivo subido
 if upload_ is not None:
@@ -142,4 +145,7 @@ if upload_ is not None:
     # Procesar la imagen para la extracción de texto
     img_filtered = process_image(uploaded_image)
     text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
-    st.write("Texto extraído de la imagen con filtro:", text)
+    if text:
+        st.write("Texto extraído de la imagen con filtro:", text)
+    else:
+        st.write("No se pudo extraer texto de la imagen.")
