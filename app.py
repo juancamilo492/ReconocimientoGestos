@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 from keras.models import load_model
-import pyttsx3  # Importa la biblioteca para TTS
 
 import platform
 
@@ -11,9 +10,6 @@ st.write("Versión de Python:", platform.python_version())
 
 model = load_model('keras_model.h5')
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-
-# Inicializa el motor de TTS
-engine = pyttsx3.init()
 
 st.title("Reconocimiento de Imágenes")
 
@@ -63,11 +59,6 @@ def predict_image(image_array):
         st.error(f"Array tiene una forma o tipo incorrecto: {image_array.shape}, {image_array.dtype}")
         return None
 
-def speak(text):
-    """Función para convertir texto a voz"""
-    engine.say(text)
-    engine.runAndWait()
-
 # Variables para almacenar las imágenes y resultados
 image_display = None
 prediction_result = None
@@ -86,16 +77,12 @@ if cam_:
             if prediction_result is not None:
                 if prediction_result[0][0] > 0.5:
                     st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
-                    speak('El objeto es palma')
                 if prediction_result[0][1] > 0.5:
                     st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-                    speak('El objeto es ok')
                 if prediction_result[0][2] > 0.5:
                     st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-                    speak('El objeto es JCBG')
                 if prediction_result[0][3] > 0.5:
                     st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-                    speak('El objeto es vacío')
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
@@ -109,16 +96,12 @@ if upload_ is not None:
         if prediction_result is not None:
             if prediction_result[0][0] > 0.5:
                 st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
-                speak('El objeto es palma')
             if prediction_result[0][1] > 0.5:
                 st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-                speak('El objeto es ok')
             if prediction_result[0][2] > 0.5:
                 st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-                speak('El objeto es JCBG')
             if prediction_result[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-                speak('El objeto es vacío')
 
 # Si se ha tomado una foto, muestra la foto y resultados
 if image_display is not None:
@@ -126,13 +109,10 @@ if image_display is not None:
     if prediction_result is not None:
         if prediction_result[0][0] > 0.5:
             st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
-            speak('El objeto es palma')
         if prediction_result[0][1] > 0.5:
             st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-            speak('El objeto es ok')
         if prediction_result[0][2] > 0.5:
             st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-            speak('El objeto es JCBG')
         if prediction_result[0][3] > 0.5:
             st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-            speak('El objeto es vacío')
+
