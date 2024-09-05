@@ -119,7 +119,3 @@ elif upload_ is not None:
                 result_container.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
                 result_container.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-
-# Si se ha tomado una foto, muestra la foto y resultados
-# (Este bloque ya está incluido en los bloques anteriores)
-
