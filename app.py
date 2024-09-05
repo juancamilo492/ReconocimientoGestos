@@ -39,7 +39,7 @@ def process_image(img):
     
     # Verifica la forma del array
     if img_array.shape != (224, 224, 3):
-        st.error("La imagen no tiene la forma esperada (224, 224, 3).")
+        st.error(f"La imagen tiene una forma inesperada: {img_array.shape}. Se esperaba (224, 224, 3).")
         return None
 
     # Normaliza la imagen
@@ -57,19 +57,24 @@ if img_file_buffer is not None:
     normalized_image_array = process_image(img)
     
     if normalized_image_array is not None:
+        # Verifica la forma y el tipo antes de asignar
+        st.write("Forma de normalized_image_array:", normalized_image_array.shape)
+        st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
+        
         # Carga la imagen en el array
-        data[0] = normalized_image_array
-        # Ejecuta la inferencia
-        prediction = model.predict(data)
-        print(prediction)
-        if prediction[0][0] > 0.5:
-            st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
-        if prediction[0][1] > 0.5:
-            st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
-        if prediction[0][2] > 0.5:
-            st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
-        if prediction[0][3] > 0.5:
-            st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
+        if normalized_image_array.shape == (224, 224, 3) and normalized_image_array.dtype == np.float32:
+            data[0] = normalized_image_array
+            # Ejecuta la inferencia
+            prediction = model.predict(data)
+            print(prediction)
+            if prediction[0][0] > 0.5:
+                st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
+            if prediction[0][1] > 0.5:
+                st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
+            if prediction[0][2] > 0.5:
+                st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
+            if prediction[0][3] > 0.5:
+                st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
@@ -78,19 +83,22 @@ if upload_ is not None:
     normalized_image_array = process_image(uploaded_image)
     
     if normalized_image_array is not None:
+        # Verifica la forma y el tipo antes de asignar
+        st.write("Forma de normalized_image_array:", normalized_image_array.shape)
+        st.write("Tipo de normalized_image_array:", normalized_image_array.dtype)
+        
         # Carga la imagen en el array
-        data[0] = normalized_image_array
-        # Ejecuta la inferencia
-        prediction = model.predict(data)
-        print(prediction)
-        if prediction[0][0] > 0.5:
-            st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
-        if prediction[0][1] > 0.5:
-            st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
-        if prediction[0][2] > 0.5:
-            st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
-        if prediction[0][3] > 0.5:
-            st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
-
-    
+        if normalized_image_array.shape == (224, 224, 3) and normalized_image_array.dtype == np.float32:
+            data[0] = normalized_image_array
+            # Ejecuta la inferencia
+            prediction = model.predict(data)
+            print(prediction)
+            if prediction[0][0] > 0.5:
+                st.header('Palma, con Probabilidad: ' + str(prediction[0][0]))
+            if prediction[0][1] > 0.5:
+                st.header('Ok, con Probabilidad: ' + str(prediction[0][1]))
+            if prediction[0][2] > 0.5:
+                st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
+            if prediction[0][3] > 0.5:
+                st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
 
