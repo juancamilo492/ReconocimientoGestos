@@ -11,16 +11,6 @@ data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 st.title("Reconocimiento de Imágenes y OCR")
 
-# Inicializa el estado de las imágenes y resultados
-if 'img_file_buffer' not in st.session_state:
-    st.session_state.img_file_buffer = None
-if 'upload_' not in st.session_state:
-    st.session_state.upload_ = None
-if 'prediction_result' not in st.session_state:
-    st.session_state.prediction_result = None
-if 'extracted_text' not in st.session_state:
-    st.session_state.extracted_text = None
-
 # Barra lateral con solo el texto
 with st.sidebar:
     st.subheader("Usa un modelo entrenado en Teachable Machine para identificar imágenes")
@@ -82,7 +72,6 @@ def extract_text_from_image(image):
 if cam_:
     img_file_buffer = st.camera_input("Toma una Foto")
     if img_file_buffer is not None:
-        st.session_state.img_file_buffer = img_file_buffer
         # Leer el buffer de la imagen como una imagen PIL
         img = Image.open(img_file_buffer).convert('RGB')
         
@@ -93,21 +82,21 @@ if cam_:
         normalized_image_array = normalize_image(img)
         if normalized_image_array is not None:
             # Realizar predicción
-            st.session_state.prediction_result = predict_image(normalized_image_array)
-            if st.session_state.prediction_result is not None:
+            prediction_result = predict_image(normalized_image_array)
+            if prediction_result is not None:
                 # Mostrar los resultados de la predicción
                 prediction_displayed = False
-                if st.session_state.prediction_result[0][0] > 0.5:
-                    st.header('Palma, con Probabilidad: ' + str(st.session_state.prediction_result[0][0]))
+                if prediction_result[0][0] > 0.5:
+                    st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
                     prediction_displayed = True
-                if st.session_state.prediction_result[0][1] > 0.5:
-                    st.header('Ok, con Probabilidad: ' + str(st.session_state.prediction_result[0][1]))
+                if prediction_result[0][1] > 0.5:
+                    st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
                     prediction_displayed = True
-                if st.session_state.prediction_result[0][2] > 0.5:
-                    st.header('JCBG, con Probabilidad: ' + str(st.session_state.prediction_result[0][2]))
+                if prediction_result[0][2] > 0.5:
+                    st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
                     prediction_displayed = True
-                if st.session_state.prediction_result[0][3] > 0.5:
-                    st.header('Vacío, con Probabilidad: ' + str(st.session_state.prediction_result[0][3]))
+                if prediction_result[0][3] > 0.5:
+                    st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
                     prediction_displayed = True
                 
                 if not prediction_displayed:
@@ -115,15 +104,14 @@ if cam_:
 
         # Procesar la imagen para la extracción de texto
         img_filtered = process_image(img)
-        st.session_state.extracted_text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
-        if st.session_state.extracted_text:
-            st.write("Texto extraído de la imagen con filtro:", st.session_state.extracted_text)
+        text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
+        if text:
+            st.write("Texto extraído de la imagen con filtro:", text)
         else:
             st.write("No se pudo extraer texto de la imagen.")
 
 # Procesar imagen desde un archivo subido
 if upload_ is not None:
-    st.session_state.upload_ = upload_
     # Leer el archivo subido como una imagen PIL
     uploaded_image = Image.open(upload_).convert('RGB')
     
@@ -134,21 +122,21 @@ if upload_ is not None:
     normalized_image_array = normalize_image(uploaded_image)
     if normalized_image_array is not None:
         # Realizar predicción
-        st.session_state.prediction_result = predict_image(normalized_image_array)
-        if st.session_state.prediction_result is not None:
+        prediction_result = predict_image(normalized_image_array)
+        if prediction_result is not None:
             # Mostrar los resultados de la predicción
             prediction_displayed = False
-            if st.session_state.prediction_result[0][0] > 0.5:
-                st.header('Palma, con Probabilidad: ' + str(st.session_state.prediction_result[0][0]))
+            if prediction_result[0][0] > 0.5:
+                st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
                 prediction_displayed = True
-            if st.session_state.prediction_result[0][1] > 0.5:
-                st.header('Ok, con Probabilidad: ' + str(st.session_state.prediction_result[0][1]))
+            if prediction_result[0][1] > 0.5:
+                st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
                 prediction_displayed = True
-            if st.session_state.prediction_result[0][2] > 0.5:
-                st.header('JCBG, con Probabilidad: ' + str(st.session_state.prediction_result[0][2]))
+            if prediction_result[0][2] > 0.5:
+                st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
                 prediction_displayed = True
-            if st.session_state.prediction_result[0][3] > 0.5:
-                st.header('Vacío, con Probabilidad: ' + str(st.session_state.prediction_result[0][3]))
+            if prediction_result[0][3] > 0.5:
+                st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
                 prediction_displayed = True
             
             if not prediction_displayed:
@@ -156,17 +144,10 @@ if upload_ is not None:
     
     # Procesar la imagen para la extracción de texto
     img_filtered = process_image(uploaded_image)
-    st.session_state.extracted_text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
-    if st.session_state.extracted_text:
-        st.write("Texto extraído de la imagen con filtro:", st.session_state.extracted_text)
+    text = extract_text_from_image(Image.fromarray(cv2.cvtColor(img_filtered, cv2.COLOR_BGR2RGB)))
+    if text:
+        st.write("Texto extraído de la imagen con filtro:", text)
     else:
         st.write("No se pudo extraer texto de la imagen.")
 
-# Botón para limpiar todos los datos
-if st.button('Clear'):
-    st.session_state.img_file_buffer = None
-    st.session_state.upload_ = None
-    st.session_state.prediction_result = None
-    st.session_state.extracted_text = None
-    st.experimental_rerun()
 
