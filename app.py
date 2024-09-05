@@ -71,11 +71,19 @@ if cam_:
             image_display = img
             prediction_result = predict_image(normalized_image_array)
             if prediction_result is not None:
+                # Muestra la predicción
+                if prediction_result[0][0] > 0.5:
+                    st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+                if prediction_result[0][1] > 0.5:
+                    st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+                if prediction_result[0][2] > 0.5:
+                    st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
                 if prediction_result[0][3] > 0.5:
                     st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-                    # Extrae y muestra el texto
-                    text = extract_text_from_image(img)
-                    st.write("Texto extraído de la imagen:", text)
+            
+            # Extrae y muestra el texto de la imagen
+            text = extract_text_from_image(img)
+            st.write("Texto extraído de la imagen:", text)
 
 if upload_ is not None:
     # Lee el archivo subido como una imagen PIL
@@ -87,18 +95,35 @@ if upload_ is not None:
         # Realiza la predicción
         prediction_result = predict_image(normalized_image_array)
         if prediction_result is not None:
+            # Muestra la predicción
+            if prediction_result[0][0] > 0.5:
+                st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+            if prediction_result[0][1] > 0.5:
+                st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+            if prediction_result[0][2] > 0.5:
+                st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
             if prediction_result[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-                # Extrae y muestra el texto
-                text = extract_text_from_image(uploaded_image)
-                st.write("Texto extraído de la imagen:", text)
+            
+        # Extrae y muestra el texto de la imagen
+        text = extract_text_from_image(uploaded_image)
+        st.write("Texto extraído de la imagen:", text)
 
 # Si se ha tomado una foto, muestra la foto y resultados
 if image_display is not None:
     st.image(image_display, caption='Foto tomada', use_column_width=True)
     if prediction_result is not None:
+        # Muestra la predicción
+        if prediction_result[0][0] > 0.5:
+            st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
+        if prediction_result[0][1] > 0.5:
+            st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
+        if prediction_result[0][2] > 0.5:
+            st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
         if prediction_result[0][3] > 0.5:
             st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
-            # Extrae y muestra el texto
-            text = extract_text_from_image(image_display)
-            st.write("Texto extraído de la imagen:", text)
+    
+    # Extrae y muestra el texto de la imagen
+    text = extract_text_from_image(image_display)
+    st.write("Texto extraído de la imagen:", text)
+
