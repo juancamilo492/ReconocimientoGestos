@@ -17,13 +17,15 @@ st.title("Reconocimiento de Imágenes")
 image = Image.open('OIG5.jpg')
 st.image(image, width=350)
 
+# Barra lateral con solo el texto
 with st.sidebar:
     st.subheader("Usa un modelo entrenado en Teachable Machine para identificar imágenes")
-    
-    # Opción para usar la cámara
-    cam_ = st.checkbox("Usar Cámara")
-    # Opción para subir una imagen desde el archivo
-    upload_ = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
+
+# Opción para usar la cámara
+cam_ = st.checkbox("Usar Cámara")
+
+# Opción para subir una imagen desde el archivo
+upload_ = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
 def process_image(img):
     # Redimensiona la imagen
@@ -101,4 +103,3 @@ if upload_ is not None:
                 st.header('JCBG, con Probabilidad: ' + str(prediction[0][2]))
             if prediction[0][3] > 0.5:
                 st.header('Vacío, con Probabilidad: ' + str(prediction[0][3]))
-
