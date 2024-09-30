@@ -9,11 +9,11 @@ from keras.models import load_model
 model = load_model('keras_model.h5')
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-st.title("Reconocimiento de Imágenes y OCR")
+st.title("Reconocimiento de Gestos. Incluye función de OCR")
 
 # Barra lateral con solo el texto
 with st.sidebar:
-    st.subheader("Usa un modelo entrenado en Teachable Machine para identificar imágenes")
+    st.subheader("Usa un modelo entrenado en Teachable Machine para identificar imágenes, e inclusive reconoce texto si lo hay")
     filtro = st.radio("Aplicar Filtro", ('Con Filtro', 'Sin Filtro'))
 
 # Opciones para cámara y carga de archivos en la parte principal
