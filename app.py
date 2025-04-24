@@ -124,13 +124,7 @@ if upload_ is not None:
                 st.header('Palma, con Probabilidad: ' + str(prediction_result[0][0]))
                 prediction_displayed = True
             if prediction_result[0][1] > 0.5:
-                st.header('Ok, con Probabilidad: ' + str(prediction_result[0][1]))
-                prediction_displayed = True
-            if prediction_result[0][2] > 0.5:
-                st.header('JCBG, con Probabilidad: ' + str(prediction_result[0][2]))
-                prediction_displayed = True
-            if prediction_result[0][3] > 0.5:
-                st.header('Vacío, con Probabilidad: ' + str(prediction_result[0][3]))
+                st.header('Apuntar, con Probabilidad: ' + str(prediction_result[0][1]))
                 prediction_displayed = True
             
             if not prediction_displayed:
